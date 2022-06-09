@@ -1,4 +1,4 @@
-package ru.hogwarts.school.Model;
+package ru.hogwarts.school.model;
 
 public class Faculty {
     private Long id;

@@ -1,9 +1,9 @@
-package ru.hogwarts.school.Model;
+package ru.hogwarts.school.model;
 
 public class Student {
-    Long id;
-    String name;
-    int age;
+    private Long id;
+    private String name;
+    private int age;
 
 
     public Student(Long id, String name, int age) {
