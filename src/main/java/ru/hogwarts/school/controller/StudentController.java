@@ -19,14 +19,14 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity <Student> createStudent(@RequestBody Student student) {
+    public ResponseEntity<Student> createStudent(@RequestBody Student student) {
         Student createStudent = studentService.createStudent(student);
         return ResponseEntity.ok(createStudent);
 
     }
 
     @GetMapping("/{idStudent}")
-    public ResponseEntity <Student> getStudent(@PathVariable Long idStudent) {
+    public ResponseEntity<Student> getStudent(@PathVariable Long idStudent) {
         Student student = studentService.getStudentId(idStudent);
         if (student == null) {
             return ResponseEntity.notFound().build();
@@ -35,28 +35,30 @@ public class StudentController {
     }
 
     @PutMapping
-    public ResponseEntity <Student> updateStudent(@RequestBody Student student) {
+    public ResponseEntity<Student> updateStudent(@RequestBody Student student) {
         Student updateStudent = studentService.updateStudent(student);
         return ResponseEntity.ok(updateStudent);
     }
 
     @DeleteMapping("/{idStudent}")
-    public ResponseEntity <Student> deleteStudent(@PathVariable Long idStudent) {
-        Student student = studentService.deleteStudent(idStudent);
-        if (student == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(student);
+    public ResponseEntity deleteStudent(@PathVariable Long idStudent) {
+        studentService.deleteStudent(idStudent);
+        return ResponseEntity.ok().build();
+
     }
 
-    @GetMapping
+    @GetMapping("/age")
     public Collection<Student> ageStudentFilter(@RequestParam(value = "age") int param) {
         return studentService.ageStudentFilter(param);
     }
 
-    @GetMapping(path = "/all")
-    public Map<Long, Student> getAllStudents() {
+    @GetMapping
+    public Collection getAgeStudents(@RequestParam int ageStart, @RequestParam int ageEnd) {
+        if ((ageStart > 0) && (ageEnd > 0)) {
+            return studentService.findByAgeBetween(ageStart, ageEnd);
+        }
         return studentService.getAllStudents();
-
     }
+
+
 }
