@@ -17,7 +17,7 @@ public class Student {
     }
 
     @ManyToOne
-@JoinColumn(name = "faculty_id")
+    @JoinColumn(name = "faculty_id")
     private Faculty faculty;
 
     public Long getId() {

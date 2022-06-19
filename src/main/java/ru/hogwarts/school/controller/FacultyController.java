@@ -55,10 +55,10 @@ public class FacultyController {
     }
   */
 
-    @GetMapping
+    @GetMapping(path = "/ColorOrName")
     public Collection<Faculty> colorOrNameFilter(@RequestParam(required = false)
-                                                 String color, @RequestParam(required = false) String name) {
-        return facultyService.colorOrNameFilter(color, name);
+                                                 String colorFaculty, @RequestParam(required = false) String nameFaculty) {
+        return facultyService.colorOrNameFilter(colorFaculty, nameFaculty);
     }
 
 }

@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class FacultyService {
+public class FacultyService implements FacultyInterface {
     private final FacultyRepository facultyRepository;
 
     public FacultyService(FacultyRepository facultyRepository) {
@@ -41,8 +41,8 @@ public class FacultyService {
                 collect(Collectors.toList());
     }
 
-    public Collection<Faculty> colorOrNameFilter(String color,String name){
-       return facultyRepository.findFacultyByColorOrName(color,name);
+    public Collection<Faculty> colorOrNameFilter(String color, String name) {
+        return facultyRepository.findFacultyByColorIgnoreCaseOrNameIgnoreCase(color, name);
     }
 
 

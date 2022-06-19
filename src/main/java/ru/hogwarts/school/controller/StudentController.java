@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.service.StudentInterface;
 import ru.hogwarts.school.service.StudentService;
 
 import java.text.CollationElementIterator;
@@ -13,7 +14,7 @@ import java.util.Map;
 @RequestMapping("/student")
 @RestController
 public class StudentController {
-    private final StudentService studentService;
+    private final StudentInterface studentService;
 
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
@@ -48,25 +49,27 @@ public class StudentController {
 
     }
 
-    @GetMapping("/age")
-    public Collection<Student> ageStudentFilter(@RequestParam(value = "age") int param) {
-        return studentService.ageStudentFilter(param);
-    }
-
-    @GetMapping
+    /*   @GetMapping()
+       public Collection<Student> ageStudentFilter(@RequestParam(value = "age") int param) {
+           return studentService.ageStudentFilter(param);
+       }
+   */
+    @GetMapping(path = "/ageBetween")
     public Collection getAgeStudents(@RequestParam int ageStart, @RequestParam int ageEnd) {
         if ((ageStart > 0) && (ageEnd > 0)) {
             return studentService.findByAgeBetween(ageStart, ageEnd);
         }
         return studentService.getAllStudents();
     }
-@GetMapping("/fff")
-    public Collection<Student> fff(@RequestParam String faculty){
-        return studentService.fff(faculty);
+
+    @GetMapping("/students")
+    public Collection<Student> findAllStudentsByFacultyName(@RequestParam String faculty) {
+        return studentService.findAllByFacultyName(faculty);
     }
-    @GetMapping("/sss")
-    public Faculty sss(@RequestParam String studentName){
-        return studentService.sss(studentName);
+
+    @GetMapping("/faculty")
+    public Faculty getFacultyByStudent(@RequestParam String studentName) {
+        return studentService.getFacultyByStudent(studentName);
     }
 
 }
