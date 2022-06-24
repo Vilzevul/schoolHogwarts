@@ -24,7 +24,7 @@ public class StudentService implements StudentInterface {
     }
 
     public Student getStudentId(Long idStudent) {
-        return studentRepository.getReferenceById(idStudent);
+        return studentRepository.findStudentById(idStudent);
 
 
     }

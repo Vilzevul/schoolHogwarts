@@ -16,7 +16,7 @@ import java.util.Map;
 public class StudentController {
     private final StudentInterface studentService;
 
-    public StudentController(StudentService studentService) {
+    public StudentController(StudentInterface studentService) {
         this.studentService = studentService;
     }
 
@@ -49,11 +49,6 @@ public class StudentController {
 
     }
 
-    /*   @GetMapping()
-       public Collection<Student> ageStudentFilter(@RequestParam(value = "age") int param) {
-           return studentService.ageStudentFilter(param);
-       }
-   */
     @GetMapping(path = "/ageBetween")
     public Collection getAgeStudents(@RequestParam int ageStart, @RequestParam int ageEnd) {
         if ((ageStart > 0) && (ageEnd > 0)) {
