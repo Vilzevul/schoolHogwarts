@@ -1,9 +1,14 @@
 package ru.hogwarts.school.service;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartFile;
+import org.webjars.NotFoundException;
+import ru.hogwarts.school.controller.BadParamsException;
 import ru.hogwarts.school.model.Avatar;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repositories.AvatarRepository;
@@ -11,11 +16,15 @@ import ru.hogwarts.school.repositories.AvatarRepository;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 import static org.apache.commons.io.FilenameUtils.getExtension;
@@ -53,7 +62,7 @@ public class AvatarService {
             bis.transferTo(bos);
         }//try
 
-        Avatar avatar = findAvatar(studentId);
+        Avatar avatar = findAvatarOrCreate(studentId);
         avatar.setStudent(student);
         avatar.setFilePath(avatarOut.toString());
         avatar.setFileSize(avatarIn.getSize());
@@ -87,7 +96,22 @@ public class AvatarService {
         }
     }
 
-    public Avatar findAvatar(Long id) {
+    public Optional<Avatar> findAvatar(Long id) throws IOException {
+        return avatarRepository.findByStudentId(id);
+    }
+
+    public Avatar findByStudentId(Long id) throws IOException {
+        return avatarRepository.findByStudentId(id).orElse(null);
+    }
+
+    public Avatar findAvatarOrCreate(Long id) throws IOException {
         return avatarRepository.findByStudentId(id).orElse(new Avatar());
     }
+
+    public List<Avatar> findAll(Integer pageNumber, Integer pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
+        return avatarRepository.findAll(pageRequest).getContent();
+    }
+
+
 }
