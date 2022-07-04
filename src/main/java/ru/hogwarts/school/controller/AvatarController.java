@@ -64,6 +64,7 @@ public class AvatarController {
         ) {
             response.setContentType(avatar.getMediaType());
             response.setContentLength((int) avatar.getFileSize());
+
             is.transferTo(os);
         }
     }
