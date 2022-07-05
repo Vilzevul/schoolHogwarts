@@ -1,5 +1,7 @@
 package ru.hogwarts.school.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -39,6 +41,8 @@ public class AvatarService {
     private final AvatarRepository avatarRepository;
     private final StudentService studentService;
 
+    Logger logger = LoggerFactory.getLogger(AvatarService.class);
+
     public AvatarService(AvatarRepository avatarRepository, StudentService studentService) {
         this.avatarRepository = avatarRepository;
         this.studentService = studentService;
@@ -47,6 +51,7 @@ public class AvatarService {
 
     public void uploadAvatar(Long studentId, MultipartFile avatarIn) throws IOException {
 
+logger.info("Вызван метод: uploadAvatar " );
 
         Student student = studentService.getStudentId(studentId);
         Path avatarOut = Path.of(avatarDir, studentId + "." + getExtension(avatarIn.getOriginalFilename()));
@@ -73,6 +78,7 @@ public class AvatarService {
     }
 
     private byte[] dataImage(Path avatarOut) throws IOException {
+        logger.info("Вызван метод: dataImage " );
         try (
 
                 InputStream is = Files.newInputStream(avatarOut);
@@ -97,18 +103,24 @@ public class AvatarService {
     }
 
     public Optional<Avatar> findAvatar(Long id) throws IOException {
+        logger.info("Вызван метод: findByStudentId {} " ,id);
         return avatarRepository.findByStudentId(id);
     }
 
     public Avatar findByStudentId(Long id) throws IOException {
+        logger.info("Вызван метод: findByStudentId {} " ,id);
         return avatarRepository.findByStudentId(id).orElse(null);
     }
 
     public Avatar findAvatarOrCreate(Long id) throws IOException {
+        logger.info("Вызван метод: findByStudentId {} " ,id);
         return avatarRepository.findByStudentId(id).orElse(new Avatar());
     }
 
     public List<Avatar> findAll(Integer pageNumber, Integer pageSize) {
+
+        logger.info("Вызван метод: findAll " );
+
         PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
         return avatarRepository.findAll(pageRequest).getContent();
     }
