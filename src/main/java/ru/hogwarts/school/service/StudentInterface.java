@@ -4,6 +4,7 @@ import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public interface StudentInterface {
@@ -24,4 +25,8 @@ public interface StudentInterface {
     Collection<Student> findAllByFacultyName(String faculty);
 
     Faculty getFacultyByStudent(String studentName);
+
+    List<Student> getAllStudentStartedFromA();
+
+    double averageAgeStudents();
 }
