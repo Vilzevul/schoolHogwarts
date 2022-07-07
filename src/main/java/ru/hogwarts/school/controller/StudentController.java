@@ -78,6 +78,16 @@ public class StudentController {
         return studentService.averageAgeStudents();
     }
 
+    //4.6 Потоки
+    @GetMapping("/stream")
+    public void toConsole() {
+        studentService.toConsole();
+    }
+
+    @GetMapping("/streamSynchronized")
+    public void toConsoleSynchronized() {
+        studentService.toConsoleSynchronized();
+    }
 
 
 }

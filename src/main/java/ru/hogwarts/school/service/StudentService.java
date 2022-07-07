@@ -11,6 +11,7 @@ import ru.hogwarts.school.model.StudentSqlList;
 import ru.hogwarts.school.repositories.StudentRepository;
 import ru.hogwarts.school.repositories.StudentSqlRepository;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -97,7 +98,8 @@ public class StudentService implements StudentInterface {
         return studentSqlRepository.getStudentSqlLast();
 
     }
-//4.5 Параллельные стримы
+
+    //4.5 Параллельные стримы
     @Override
     public List<Student> getAllStudentStartedFromA() {
         return studentRepository.findAll().stream()
@@ -112,6 +114,65 @@ public class StudentService implements StudentInterface {
     public double averageAgeStudents() {
         return studentRepository.findAll().stream()
                 .mapToInt(v -> v.getAge()).average().getAsDouble();
+    }
+
+    @Override
+    public void toConsole() {
+        List<String> studentsName = new ArrayList<>();
+        studentsName = studentRepository.findAll().stream()
+                .map(v -> v.getName()).limit(6)
+                .sorted((v, s) -> v.compareTo(s))
+                .collect(Collectors.toList());
+        List<String> finalStudentsName = studentsName;
+
+        System.out.println(studentsName);
+//thread1
+        System.out.println(finalStudentsName.get(0));
+        System.out.println(finalStudentsName.get(1));
+
+        new Thread(() -> {
+            System.out.println(finalStudentsName.get(2));
+            System.out.println(finalStudentsName.get(3));
+        }).run();
+
+        Thread thread = new Thread(() -> {
+            System.out.println(finalStudentsName.get(4));
+            System.out.println(finalStudentsName.get(5));
+        });
+        thread.run();
+
+
+    }
+
+    //thread2
+    List<String> finalStudentsName = new ArrayList<>();
+
+    private synchronized void nameToConsole(int i) {
+        System.out.println(finalStudentsName.get(i));
+    }
+
+    @Override
+    public void toConsoleSynchronized() {
+        List<String> studentsName = new ArrayList<>();
+        studentsName = studentRepository.findAll().stream()
+                .map(v -> v.getName()).limit(6)
+                .sorted((v, s) -> v.compareTo(s))
+                .collect(Collectors.toList());
+        finalStudentsName = studentsName;
+
+        nameToConsole(0);
+        nameToConsole(1);
+
+        new Thread(() -> {
+            nameToConsole(2);
+            nameToConsole(3);
+        }).run();
+
+        new Thread(() -> {
+            nameToConsole(4);
+            nameToConsole(5);
+        }).run();
+
     }
 
 }
