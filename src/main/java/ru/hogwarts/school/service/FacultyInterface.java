@@ -18,4 +18,9 @@ public interface FacultyInterface {
     void deleteFaculty(Long idFaculty);
 
     Collection<Faculty> colorOrNameFilter(String color, String name);
+
+
+    String longestFacultyName();
+
+    int mining();
 }

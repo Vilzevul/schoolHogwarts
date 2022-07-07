@@ -1,5 +1,6 @@
 package ru.hogwarts.school.controller;
 
+import liquibase.pro.packaged.L;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
@@ -58,4 +59,12 @@ public class FacultyController {
         return facultyService.colorOrNameFilter(colorFaculty, nameFaculty);
     }
 
+    @GetMapping("/longestName")
+    public String longestFacultyName() {
+        return facultyService.longestFacultyName();
+    }
+@GetMapping("/int")
+    public int mining(){
+        return facultyService.mining();
+    }
 }

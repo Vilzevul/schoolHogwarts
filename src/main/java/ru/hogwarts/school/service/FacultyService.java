@@ -9,11 +9,12 @@ import ru.hogwarts.school.repositories.FacultyRepository;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class FacultyService implements FacultyInterface {
     private final FacultyRepository facultyRepository;
-Logger logger = LoggerFactory.getLogger(FacultyService.class);
+    Logger logger = LoggerFactory.getLogger(FacultyService.class);
 
     public FacultyService(FacultyRepository facultyRepository) {
         this.facultyRepository = facultyRepository;
@@ -27,12 +28,12 @@ Logger logger = LoggerFactory.getLogger(FacultyService.class);
     }
 
     public Optional<Faculty> getFacultyId(Long idFaculty) {
-        logger.debug("Метод: getFacultyId {}",idFaculty);
+        logger.debug("Метод: getFacultyId {}", idFaculty);
         return facultyRepository.findById(idFaculty);
     }
 
     public Faculty updateFaculty(Faculty faculty) {
-logger.debug("Метод: updateFaculty ");
+        logger.debug("Метод: updateFaculty ");
         return facultyRepository.save(faculty);
     }
 
@@ -51,6 +52,25 @@ logger.debug("Метод: updateFaculty ");
     public Collection<Faculty> colorOrNameFilter(String color, String name) {
         logger.debug("Метод: colorOrNameFilter ");
         return facultyRepository.findFacultyByColorIgnoreCaseOrNameIgnoreCase(color, name);
+    }
+
+    //4.5 Параллельные стримы
+    @Override
+    public String longestFacultyName() {
+        return facultyRepository.findAll().stream()
+                .map(n -> n.getName())
+                .max((v, n) -> v.length() - n.length()).get();
+
+    }
+
+    @Override
+    public int mining() {
+        int sum = Stream
+                .iterate(1, a -> a + 1)
+                .parallel()
+                .limit(1_000_000)
+                .reduce(0, (a, b) -> a + b);
+        return sum;
     }
 
 

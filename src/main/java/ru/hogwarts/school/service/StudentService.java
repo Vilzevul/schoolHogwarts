@@ -12,13 +12,14 @@ import ru.hogwarts.school.repositories.StudentRepository;
 import ru.hogwarts.school.repositories.StudentSqlRepository;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class StudentService implements StudentInterface {
     private final StudentRepository studentRepository;
     private final StudentSqlRepository studentSqlRepository;
-Logger logger = LoggerFactory.getLogger(StudentService.class);
+    Logger logger = LoggerFactory.getLogger(StudentService.class);
 
     public StudentService(StudentRepository studentRepository, StudentSqlRepository studentSqlRepository) {
         this.studentRepository = studentRepository;
@@ -27,14 +28,17 @@ Logger logger = LoggerFactory.getLogger(StudentService.class);
 
 
     public Collection getAllStudents() {
-logger.trace("Метод: getAllStudents");
+        logger.trace("Метод: getAllStudents");
         return studentRepository.findAll();
     }
 
     public Student getStudentId(Long idStudent) {
-        logger.trace("Метод: getStudentId {} ",idStudent);
-        return studentRepository.findById(idStudent).orElseThrow(() -> new NotFoundException("Студент не найден"));
+        logger.trace("Метод: getStudentId {} ", idStudent);
+        return studentRepository.findById(idStudent).orElseGet(() -> {
+            logger.error("Студент: {} не найден ", idStudent);
+            throw new NotFoundException("Студент не найден");
 
+        });
 
 
     }
@@ -72,7 +76,7 @@ logger.trace("Метод: getAllStudents");
     }
 
     public Faculty getFacultyByStudent(String studentName) {
-        logger.trace("Метод: getFacultyByStudent {} ",studentName);
+        logger.trace("Метод: getFacultyByStudent {} ", studentName);
         Student student = studentRepository.findStudentByName(studentName);
         return student.getFaculty();
     }
@@ -92,6 +96,22 @@ logger.trace("Метод: getAllStudents");
         logger.trace("Метод: getStudentSqlLast ");
         return studentSqlRepository.getStudentSqlLast();
 
+    }
+//4.5 Параллельные стримы
+    @Override
+    public List<Student> getAllStudentStartedFromA() {
+        return studentRepository.findAll().stream()
+                .peek(v -> v.setName(v.getName().toUpperCase()))
+                .filter(v -> v.getName().substring(0, 1).equals("А"))
+                .sorted((v, s) -> v.getName().compareTo(s.getName()))
+                .collect(Collectors.toList())
+                ;
+    }
+
+    @Override
+    public double averageAgeStudents() {
+        return studentRepository.findAll().stream()
+                .mapToInt(v -> v.getAge()).average().getAsDouble();
     }
 
 }

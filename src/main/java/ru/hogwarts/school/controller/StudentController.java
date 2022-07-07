@@ -67,4 +67,17 @@ public class StudentController {
         return studentService.getFacultyByStudent(studentName);
     }
 
+    @GetMapping("/findAll'A'")
+    public Collection<Student> getAllStudentStartedFromA() {
+
+        return studentService.getAllStudentStartedFromA();
+    }
+
+    @GetMapping("/averageAge")
+    public double averageAgeStudents() {
+        return studentService.averageAgeStudents();
+    }
+
+
+
 }
