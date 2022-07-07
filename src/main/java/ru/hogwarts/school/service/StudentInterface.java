@@ -29,4 +29,8 @@ public interface StudentInterface {
     List<Student> getAllStudentStartedFromA();
 
     double averageAgeStudents();
+
+    void toConsole();
+
+    void toConsoleSynchronized();
 }
